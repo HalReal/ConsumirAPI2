@@ -26,8 +26,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:backgroundTint="@color/black"
-            android:textColor="@color/white"
-            android:text="Guardar datos en la BD" />
+            android:text="Mostrar y guardar"
+            android:textColor="@color/white" />
 
     </LinearLayout>
 

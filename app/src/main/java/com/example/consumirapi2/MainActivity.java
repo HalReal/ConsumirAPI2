@@ -48,9 +48,6 @@ public class MainActivity extends AppCompatActivity {
     public void getSuperHeroes() {
         Call<List<Product>> call = ApiClient.getInstance().getMyApi().getsuperHeroes();
         call.enqueue(new Callback<List<Product>>() {
-
-            //aca se tiene que hacer que el arreglo, se guarde en la DB.
-
             @Override
             public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
                 List<Product> myheroList = response.body();
@@ -59,11 +56,13 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < myheroList.size(); i++) {
                     oneHeroes[i] = myheroList.get(i).getName();
 
-                    //myheroList es donde se almacenan los datos
+                    //myheroList es el array donde se almacenan los datos
                     //Name es cada uno de los nombres almacenados
+                    //Se convierte el array a texto
                     String data = myheroList.get(i).getName();
-                    MyDataBaseHelper myDB = new MyDataBaseHelper(MainActivity.this);
 
+                    MyDataBaseHelper myDB = new MyDataBaseHelper(MainActivity.this);
+                    //Se insertan los datos en la base de datos.
                     myDB.addRegistro(data);
 
                 }
@@ -78,4 +77,13 @@ public class MainActivity extends AppCompatActivity {
 
         });
     }
+
+    public void verRegistros(){
+        MyDataBaseHelper db = new MyDataBaseHelper(MainActivity.this);
+        SQLiteDatabase sqlitedb = db.getWritableDatabase();
+
+    }
+
+
+
 }
