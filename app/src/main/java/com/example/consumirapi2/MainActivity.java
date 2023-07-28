@@ -3,8 +3,11 @@ package com.example.consumirapi2;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.database.sqlite.SQLiteDatabase;
@@ -17,7 +20,6 @@ import com.example.consumirapi2.network.ApiClient;
 import org.json.JSONArray;
 
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,42 +27,25 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     ListView superListView;
-
+    Button btn_guardar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        superListView = findViewById(R.id.superListView);
-        getSuperHeroes();
-
-//        //aca luego de hacer el fetch de la API, se guardará en la base de datos de sqlite
-//        String apiData = "name";
-//
-//        MyDataBaseHelper databaseHelper = new My DataBaseHelper(this);
-//        SQLiteDatabase db = databaseHelper.getWritableDatabase();
-//
-//        ContentValues values = new ContentValues();
-//        values.put(MyDataBaseHelper.COLUMN_NAME);
-//
-//        long newRowId = db.insert(MyDataBaseHelper.TABLE_NAME, null, values);
-//        SQLiteDatabase dbRead = databaseHelper.getReadableDatabase();
-//
-//        String[] projection = {databaseHelper.COLUMN_NAME};
-//        Cursor cursor = dbRead.query(DatabaseHelper.TABLE_NAME, projection, null, null, null, null, null);
-//
-//        String apiDataFromDB = "";
-//
-//        if(cursor.moveToFirst()) {
-//            apiDataFromDB = cursor.getString(getColumnIndex(DatabaseHelper.COLUMN_NAME));
-//        }
-//
-//    cursor.close();
+        btn_guardar = findViewById(R.id.btn_Guardar);
+        btn_guardar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                superListView = findViewById(R.id.superListView);
+                getSuperHeroes();
+            }
+        });
 
     }
 
-    private void getSuperHeroes() {
+    public void getSuperHeroes() {
         Call<List<Product>> call = ApiClient.getInstance().getMyApi().getsuperHeroes();
         call.enqueue(new Callback<List<Product>>() {
 
@@ -74,11 +59,15 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < myheroList.size(); i++) {
                     oneHeroes[i] = myheroList.get(i).getName();
 
+                    //myheroList es donde se almacenan los datos
+                    //Name es cada uno de los nombres almacenados
                     String data = myheroList.get(i).getName();
+                    MyDataBaseHelper myDB = new MyDataBaseHelper(MainActivity.this);
 
-                    System.out.println("Capturando Datos ===>"+ data);
+                    myDB.addRegistro(data);
+
                 }
-// 1
+
                 superListView.setAdapter(new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, oneHeroes));
             }
 

@@ -1,8 +1,10 @@
-package data;//import
+package com.example.consumirapi2;//import
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 //Notas a mi: Para la clase MyDataBaseHelper la cual es
 
@@ -38,5 +40,18 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
         //Se encarga de manejar el esquema de la base de datos si es que se da un cambio en la misma
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
+    }
+
+    public void addRegistro(String name){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_NAME, name);
+        long result = db.insert(TABLE_NAME, null, cv);
+        if(result == -1){
+            Toast.makeText(context, "Fallo la insercion del dato en la base de datos", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(context, "Dato insertado correctamente", Toast.LENGTH_SHORT).show();
+        }
     }
 }
