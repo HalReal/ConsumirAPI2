@@ -19,6 +19,7 @@ import com.example.consumirapi2.network.ApiClient;
 
 import org.json.JSONArray;
 
+import java.util.ArrayList;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,23 +27,48 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    ListView superListView;
+    ListView superListView; //Usar para mostrar los datos.
     Button btn_guardar;
+    MyDataBaseHelper db;
+    ArrayList<String> listItems;
+    ArrayAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        db = new MyDataBaseHelper(this);
+        listItems = new ArrayList<>();
+        superListView = findViewById(R.id.superListView);
+
+
+        viewData();
+
         btn_guardar = findViewById(R.id.btn_Guardar);
         btn_guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                superListView = findViewById(R.id.superListView);
                 getSuperHeroes();
             }
         });
 
+    }
+
+    private void viewData() {
+        Cursor cursor = db.viewDatos();
+
+        //Si al realizar la cuenta es igual a cero, entonces no hay datos para mostrar
+        if(cursor.getCount() == 0) {
+            Toast.makeText(this, "No hay datos para mostrar", Toast.LENGTH_SHORT).show();
+        } else {
+            while (cursor.moveToNext()){
+                listItems.add(cursor.getString(1));
+            }
+
+            adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listItems);
+            superListView.setAdapter(adapter);
+        }
     }
 
     public void getSuperHeroes() {
@@ -78,11 +104,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void verRegistros(){
-        MyDataBaseHelper db = new MyDataBaseHelper(MainActivity.this);
-        SQLiteDatabase sqlitedb = db.getWritableDatabase();
-
-    }
+//    public void verRegistros(){
+//        MyDataBaseHelper db = new MyDataBaseHelper(MainActivity.this);
+//        SQLiteDatabase sqlitedb = db.getWritableDatabase();
+//
+//    }
 
 
 

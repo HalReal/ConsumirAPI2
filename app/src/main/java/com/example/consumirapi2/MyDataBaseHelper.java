@@ -2,9 +2,12 @@ package com.example.consumirapi2;//import
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 //Notas a mi: Para la clase MyDataBaseHelper la cual es
 
@@ -49,9 +52,17 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_NAME, name);
         long result = db.insert(TABLE_NAME, null, cv);
         if(result == -1){
-            Toast.makeText(context, "Fallo la insercion del dato en la base de datos", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Fallo al guardar el dato en la base de datos", Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(context, "Dato insertado correctamente", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Dato guardado correctamente", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    //Mostrar datos
+    public Cursor viewDatos() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM "+ TABLE_NAME;
+        Cursor cursor = db.rawQuery(query, null);
+        return cursor;
     }
 }
